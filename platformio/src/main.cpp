@@ -16,14 +16,14 @@
  */
 
 #include <Arduino.h>
-#include <Adafruit_BME280.h>
-#include <Adafruit_Sensor.h>
+//#include <Adafruit_BME280.h>
+//#include <Adafruit_Sensor.h>
 #include <Preferences.h>
 #include <time.h>
 #include <WiFi.h>
-#include <Wire.h>
+//#include <Wire.h>
 
-#include "api_response.h"
+#include "owm_api.h"
 #include "client_utils.h"
 #include "config.h"
 #include "display_utils.h"
@@ -106,6 +106,25 @@ void beginDeepSleep(unsigned long &startTime, tm *timeInfo)
   Serial.println("Deep-sleep for " + String(sleepDuration) + "s");
   esp_deep_sleep_start();
 } // end beginDeepSleep
+
+
+void checkHttpError(int rxStatus, String statusStr, const uint8_t *bitmap_196x196, unsigned long startTime, tm *timeInfo)
+{
+  if (rxStatus != HTTP_CODE_OK)
+  {
+    String tmpStr;
+    tmpStr = String(rxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
+    initDisplay();
+    do
+    {
+      drawError(bitmap_196x196, statusStr, tmpStr);
+    } while (display.nextPage());
+    display.powerOff();
+    killWiFi();
+    beginDeepSleep(startTime, timeInfo);
+  }
+} // checkHttpError
+
 
 /* Program entry point.
  */
@@ -225,7 +244,7 @@ void setup()
   String refreshTimeStr;
   getRefreshTimeStr(refreshTimeStr, timeConfigured, &timeInfo);
 
-  // MAKE API REQUESTS
+  // MAKE OPENWEATHER API REQUESTS
   int rxOWM[2] = {};
   WiFiClient client;
   rxOWM[0] = getOWMonecall(client, owm_onecall);
@@ -243,7 +262,7 @@ void setup()
     beginDeepSleep(startTime, &timeInfo);
   }
   rxOWM[1] = getOWMairpollution(client, owm_air_pollution);
-  killWiFi(); // wifi no longer needed
+
   if (rxOWM[1] != HTTP_CODE_OK)
   {
     statusStr = "Air Pollution API";
@@ -257,31 +276,34 @@ void setup()
     beginDeepSleep(startTime, &timeInfo);
   }
 
-  // GET INDOOR TEMPERATURE AND HUMIDITY, start BME280...
-  float inTemp     = NAN;
-  float inHumidity = NAN;
-
-  TwoWire I2C_bme = TwoWire(0);
-  Adafruit_BME280 bme;
-
-  I2C_bme.begin(PIN_BME_SDA, PIN_BME_SCL, 100000); // 100kHz
-  if(bme.begin(BME_ADDRESS, &I2C_bme))
-  { 
-    inTemp     = bme.readTemperature(); // Celsius
-    inHumidity = bme.readHumidity();    // %
-
-    // check if BME readings are valid
-    // note: readings are checked again before drawing to screen. If a reading
-    //       is not a number (NAN) then an error occured, a dash '-' will be
-    //       displayed.
-    if (isnan(inTemp) || isnan(inHumidity)) {
-      statusStr = "BME read failed";
-    }
-  }
-  else
+  // MAKE JEEDOM API REQUESTS
+  jeedom_house_t houseSensors
   {
-    statusStr = "BME not found"; // check wiring
-  }
+    .tempBedRIsaac { .id = "183", .value = "0", .unit = "`C"},
+    .tempBedRVS { .id = "185", .value = "0", .unit = "`C"},
+    .tempOffice { .id = "181", .value = "0", .unit = "`C"},
+    .tempLiving { .id = "187", .value = "0", .unit = "`C"},
+    .powSolar { .id = "332", .value = "0", .unit = "W"},
+    .powHouse { .id = "331", .value = "0", .unit = "W"},
+    .powMeter { .id = "330", .value = "0", .unit = "W"}
+  };
+
+  int rxJeedomAPI;
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.tempBedRIsaac);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.tempBedRVS);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.tempOffice);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.tempLiving);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.powSolar);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.powHouse);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.powMeter);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  killWiFi();
 
   // RENDER FULL REFRESH
   String dateStr;
@@ -291,11 +313,12 @@ void setup()
   do
   {
     drawCurrentConditions(owm_onecall.current, owm_onecall.daily[0],
-                          owm_air_pollution, inTemp, inHumidity);
+                          owm_air_pollution);
     drawForecast(owm_onecall.daily, timeInfo);
-    drawAlerts(owm_onecall.alerts, CITY_STRING, dateStr);
+    ///drawAlerts(owm_onecall.alerts, CITY_STRING, dateStr);
     drawLocationDate(CITY_STRING, dateStr);
-    drawOutlookGraph(owm_onecall.hourly, timeInfo);
+    // drawOutlookGraph(owm_onecall.hourly, timeInfo);
+    drawHouseTempPow(houseSensors);
     drawStatusBar(statusStr, refreshTimeStr, wifiRSSI, batteryVoltage);
   } while (display.nextPage());
   display.powerOff();

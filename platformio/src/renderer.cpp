@@ -18,7 +18,7 @@
 #include "_locale.h"
 #include "_strftime.h"
 #include "renderer.h"
-#include "api_response.h"
+#include "owm_api.h"
 #include "config.h"
 #include "display_utils.h"
 
@@ -52,6 +52,7 @@
 #include "icons/icons_128x128.h"
 #include "icons/icons_160x160.h"
 #include "icons/icons_196x196.h"
+#include "icons/house_plan_800x290.h"
 
 #ifdef DISP_BW
 GxEPD2_BW<GxEPD2_750_T7, GxEPD2_750_T7::HEIGHT> display(
@@ -233,8 +234,7 @@ void initDisplay()
  * associated icons.
  */
 void drawCurrentConditions(owm_current_t &current, owm_daily_t &today,
-                           owm_resp_air_pollution_t &owm_air_pollution, 
-                           float inTemp, float inHumidity)
+                           owm_resp_air_pollution_t &owm_air_pollution)
 {
   String dataStr, unitStr;
   // current weather icon
@@ -260,6 +260,8 @@ void drawCurrentConditions(owm_current_t &current, owm_daily_t &today,
   dataStr = String(TXT_FEELS_LIKE) + ' ' 
             + String(static_cast<int>(round(current.feels_like))) + '`';
   drawString(196 + 164 / 2, 98 + 69 / 2 + 12 + 17, dataStr, CENTER);
+
+  /*
 
   // line dividing top and bottom display areas
   // display.drawLine(0, 196, DISP_WIDTH - 1, 196, GxEPD_BLACK);
@@ -482,6 +484,8 @@ void drawCurrentConditions(owm_current_t &current, owm_daily_t &today,
   display.setFont(&FreeSans8pt8b);
   drawString(display.getCursorX(), 204 + 17 / 2 + (48 + 8) * 4 + 48 / 2, 
              "%", LEFT);
+
+  */
 
   return;
 } // end drawCurrentConditions
@@ -863,3 +867,33 @@ void drawError(const uint8_t *bitmap_196x196,
                              bitmap_196x196, 196, 196, GxEPD_BLACK);
   return;
 } // end drawError
+
+
+/* This function is responsible for drawing the plan of the house with temperatures
+ * and power flows.
+ */
+void drawHouseTempPow(jeedom_house_t houseSensors)
+{
+  String tempStr = {};
+  // Draw House 2D plan.
+  display.drawInvertedBitmap(0, 190, house_plan_800x290, 800, 290, GxEPD_BLACK);
+  // Write Temeratures
+  display.setFont(&FreeSans12pt8b);
+  tempStr = houseSensors.tempOffice.value + houseSensors.tempOffice.unit;
+  drawString(20, 280, tempStr, LEFT);
+  tempStr = houseSensors.tempBedRVS.value + houseSensors.tempBedRVS.unit;
+  drawString(35, 425, tempStr, LEFT);
+  tempStr = houseSensors.tempBedRIsaac.value + houseSensors.tempBedRIsaac.unit;
+  drawString(280, 270, tempStr, LEFT);
+  tempStr = houseSensors.tempLiving.value + houseSensors.tempLiving.unit;
+  drawString(210, 425, tempStr, LEFT);
+  // Write Power flow
+  tempStr = houseSensors.powSolar.value + houseSensors.powSolar.unit;
+  drawString(535, 390, tempStr, LEFT);
+  tempStr = houseSensors.powHouse.value + houseSensors.powHouse.unit;
+  drawString(385, 390, tempStr, LEFT);
+  tempStr = houseSensors.powMeter.value + houseSensors.powMeter.unit;
+  drawString(540, 280, tempStr, LEFT);
+
+  return;
+}

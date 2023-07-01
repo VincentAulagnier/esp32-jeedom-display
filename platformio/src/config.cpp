@@ -36,12 +36,14 @@ const uint8_t PIN_BME_SCL = 16;
 const uint8_t BME_ADDRESS = 0x76; // if sensor does not work, try 0x77
 
 // WIFI CREDENTIALS
-const char *WIFI_SSID     = "ssid";
-const char *WIFI_PASSWORD = "password";
+const char *WIFI_SSID     = "SFR_9650";
+const char *WIFI_PASSWORD = "igona5laymolleadripp";
+//const char *WIFI_SSID     = "Wifi_Vincent";
+//const char *WIFI_PASSWORD = "vin100_8fi";
 
 // OPENWEATHERMAP API
 // OpenWeatherMap API key, https://openweathermap.org/
-const String OWM_APIKEY   = "abcdefghijklmnopqrstuvwxyz012345";
+const String OWM_APIKEY   = "830e00794d70d3c7fb011403bed83316";
 const String OWM_ENDPOINT = "api.openweathermap.org";
 // OpenWeatherMap One Call 2.5 API is deprecated for all new free users 
 // (accounts created after Summer 2022).
@@ -59,18 +61,24 @@ const String OWM_ENDPOINT = "api.openweathermap.org";
 //   calls.
 const String OWM_ONECALL_VERSION = "3.0";
 
+// JEEDOM HTTP API
+// JEEDOM Server IP address.
+const String JEEDOM_ENDPOINT = "http://192.168.1.32";
+// JEEDOM API KEY.
+const String JEEDOM_API_KEY = "pyNFKbC8tqblZZHlnsbWDOqgUmiIGJDDfNjiYveI91ga6IMZ0NebyQeCq4ajHqNR";
+
 // LOCATION
 // Set your latitude and longitude.
 // (used to get weather data as part of API requests to OpenWeatherMap)
-const String LAT = "40.7128";
-const String LON = "-74.0060";
+const String LAT = "45.297970";
+const String LON = "5.636550";
 // City name that will be shown in the top-right corner of the display.
-const String CITY_STRING = "New York, New York";
+const String CITY_STRING = "Voreppe";
 
 // TIME
 // For list of time zones see 
 // https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
-const char *TIMEZONE = "EST5EDT,M3.2.0,M11.1.0";
+const char *TIMEZONE = "CET-1CEST,M3.5.0,M10.5.0/3";
 // Time format used when displaying sunrise/set times. (Max 11 characters)
 // For more information about formatting see
 // https://man7.org/linux/man-pages/man3/strftime.3.html
@@ -93,7 +101,7 @@ const char *REFRESH_TIME_FORMAT = "%x %H:%M";
 // NTP_SERVER_1 is the primary time server, while NTP_SERVER_2 is a fallback.
 // In most cases it's best to use pool.ntp.org to find an NTP server
 // The system will try finding the closest available servers for you.
-const char *NTP_SERVER_1 = "us.pool.ntp.org";
+const char *NTP_SERVER_1 = "pool.ntp.org";
 const char *NTP_SERVER_2 = "time.nist.gov";
 // Sleep duration in minutes. (aka how often esp32 will wake for an update)
 // Aligned to the nearest minute boundary, so if 30 will always update at 00 or 
@@ -101,8 +109,8 @@ const char *NTP_SERVER_2 = "time.nist.gov";
 const long SLEEP_DURATION = 30;
 // If BED_TIME == WAKE_TIME, then this battery saving feature will be disabled.
 // (range: 0-23)
-const int BED_TIME  = 00; // Last update at 00:00 (midnight) until WAKE_TIME.
-const int WAKE_TIME = 06; // Hour of first update after BED_TIME, 06:00.
+const int BED_TIME  = 23; // Last update until WAKE_TIME.
+const int WAKE_TIME = 07; // Hour of first update after BED_TIME, 06:00.
 
 // HOURLY OUTLOOK GRAPH
 // Number of hours to display on the outlook graph.

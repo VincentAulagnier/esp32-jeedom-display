@@ -32,7 +32,7 @@
 
 // header files
 #include "_locale.h"
-#include "api_response.h"
+#include "owm_api.h"
 #include "aqi.h"
 #include "client_utils.h"
 #include "config.h"
@@ -222,3 +222,35 @@ int getOWMairpollution(WiFiClient &client, owm_resp_air_pollution_t &r)
   }
   return httpResponse;
 } // getOWMairpollution
+
+
+int getJeedomValueById(WiFiClient &client, jeedom_sensor_t *r)
+{
+  int attempts = 0;
+  bool rxSuccess = false;
+  int httpResponse = 0;
+
+  String uri = "/core/api/jeeApi.php?apikey=" + JEEDOM_API_KEY + "&type=cmd&id=" + r->id;
+
+  while (!rxSuccess && attempts < 3)
+  {
+    HTTPClient http;
+    http.begin(client, JEEDOM_ENDPOINT + uri);
+    httpResponse = http.GET();
+    if (httpResponse == HTTP_CODE_OK)
+    {
+      r->value = http.getString();
+      rxSuccess = true;
+    }
+    else
+    {
+      Serial.println("Jeedom HTTP API error: " 
+        + String(httpResponse, DEC) + " " 
+        + getHttpResponsePhrase(httpResponse));
+    }
+    client.stop();
+    http.end();
+    ++attempts;
+  }
+  return httpResponse;
+} // getJeedomValueById

@@ -1,0 +1,1 @@
+python png_to_header.py -i png/house_plan_800x290.png -o icons/house_plan_800x290.h.txt

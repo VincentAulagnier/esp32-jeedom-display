@@ -21,7 +21,7 @@
 #include <vector>
 #include <Arduino.h>
 #include <time.h>
-#include "api_response.h"
+#include "owm_api.h"
 #include "config.h"
 
 #define DISP_WIDTH  800
@@ -51,8 +51,7 @@ void drawMultiLnString(int16_t x, int16_t y, String text, alignment_t alignment,
                        int16_t line_spacing);
 void initDisplay();
 void drawCurrentConditions(owm_current_t &current, owm_daily_t &today,
-                           owm_resp_air_pollution_t &owm_air_pollution, 
-                           float inTemp, float inHumidity);
+                           owm_resp_air_pollution_t &owm_air_pollution);
 void drawForecast(owm_daily_t *const daily, tm timeInfo);
 void drawAlerts(std::vector<owm_alerts_t> &alerts,
                 const String &city, const String &date);
@@ -62,5 +61,6 @@ void drawStatusBar(String statusStr, String refreshTimeStr, int rssi,
                    double batVoltage);
 void drawError(const uint8_t *bitmap_196x196, 
                const String &errMsgLn1, const String &errMsgLn2);
+void drawHouseTempPow(jeedom_house_t houseSensors);
 
 #endif

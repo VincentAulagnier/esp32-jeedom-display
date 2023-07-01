@@ -31,6 +31,7 @@ extern const char *LC_D_T_FMT;
 extern const char *LC_D_FMT;
 extern const char *LC_T_FMT;
 extern const char *LC_T_FMT_AMPM;
+extern const char *LC_DATE_FORMAT;
 
 // OWM LANGUAGE
 extern const String OWM_LANG;

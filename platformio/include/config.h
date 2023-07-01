@@ -40,14 +40,14 @@
 // official support for your locale.
 // Uncomment your preferred locale. (exactly 1 must be defined)
 // #define LOCALE_EN_GB
-#define LOCALE_EN_US
+#define LOCALE_FR
 
 // UNITS
 // Select either metric or imperial units
 // https://openweathermap.org/api/one-call-api#data
 // Uncomment your preferred units. (exactly 1 must be defined)
-// #define UNITS_METRIC
-#define UNITS_IMPERIAL
+#define UNITS_METRIC
+// #define UNITS_IMPERIAL
 
 // AIR QUALITY INDEX
 // Seemingly every country uses a different scale for Air Quality Index (AQI).
@@ -57,14 +57,14 @@
 // Uncomment your preferred AQI scale. (exactly 1 must be defined)
 // #define AUSTRALIA_AQI
 // #define CANADA_AQHI
-// #define EUROPE_CAQI
+#define EUROPE_CAQI
 // #define HONG_KONG_AQHI
 // #define INDIA_AQI
 // #define MAINLAND_CHINA_AQI
 // #define SINGAPORE_PSI
 // #define SOUTH_KOREA_CAI
 // #define UNITED_KINGDOM_DAQI
-#define UNITED_STATES_AQI
+// #define UNITED_STATES_AQI
 
 // WIND
 // The wind direction icon shown to the left of the wind speed can indicate wind
@@ -105,6 +105,8 @@ extern const char *WIFI_PASSWORD;
 extern const String OWM_APIKEY;
 extern const String OWM_ENDPOINT;
 extern const String OWM_ONECALL_VERSION;
+extern const String JEEDOM_ENDPOINT;
+extern const String JEEDOM_API_KEY;
 extern const String LAT;
 extern const String LON;
 extern const String CITY_STRING;
