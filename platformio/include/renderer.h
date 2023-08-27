@@ -22,6 +22,7 @@
 #include <Arduino.h>
 #include <time.h>
 #include "owm_api.h"
+#include "jeedom_api.h"
 #include "config.h"
 
 #define DISP_WIDTH  800

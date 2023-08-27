@@ -63,7 +63,7 @@ const String OWM_ONECALL_VERSION = "3.0";
 
 // JEEDOM HTTP API
 // JEEDOM Server IP address.
-const String JEEDOM_ENDPOINT = "http://192.168.1.32";
+const String JEEDOM_ENDPOINT = "http://192.168.1.59";
 // JEEDOM API KEY.
 const String JEEDOM_API_KEY = "pyNFKbC8tqblZZHlnsbWDOqgUmiIGJDDfNjiYveI91ga6IMZ0NebyQeCq4ajHqNR";
 

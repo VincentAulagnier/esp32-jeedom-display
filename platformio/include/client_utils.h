@@ -19,6 +19,7 @@
 #define __CLIENT_UTILS_H__
 
 #include <Arduino.h>
+#include "jeedom_api.h"
 
 wl_status_t startWiFi(int &wifiRSSI);
 void killWiFi();

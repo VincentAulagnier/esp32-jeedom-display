@@ -19,6 +19,7 @@
 #include "_strftime.h"
 #include "renderer.h"
 #include "owm_api.h"
+#include "jeedom_api.h"
 #include "config.h"
 #include "display_utils.h"
 
@@ -886,7 +887,10 @@ void drawHouseTempPow(jeedom_house_t houseSensors)
   tempStr = houseSensors.tempBedRIsaac.value + houseSensors.tempBedRIsaac.unit;
   drawString(280, 270, tempStr, LEFT);
   tempStr = houseSensors.tempLiving.value + houseSensors.tempLiving.unit;
-  drawString(210, 425, tempStr, LEFT);
+  drawString(210, 400, tempStr, LEFT);
+  // Write Humidity
+  tempStr = houseSensors.humidityLiving.value + houseSensors.humidityLiving.unit;
+  drawString(210, 435, tempStr, LEFT);
   // Write Power flow
   tempStr = houseSensors.powSolar.value + houseSensors.powSolar.unit;
   drawString(535, 390, tempStr, LEFT);

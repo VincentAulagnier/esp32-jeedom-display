@@ -24,6 +24,7 @@
 //#include <Wire.h>
 
 #include "owm_api.h"
+#include "jeedom_api.h"
 #include "client_utils.h"
 #include "config.h"
 #include "display_utils.h"
@@ -283,6 +284,7 @@ void setup()
     .tempBedRVS { .id = "185", .value = "0", .unit = "`C"},
     .tempOffice { .id = "181", .value = "0", .unit = "`C"},
     .tempLiving { .id = "187", .value = "0", .unit = "`C"},
+    .humidityLiving { .id = "874", .value = "0", .unit = "%"},
     .powSolar { .id = "332", .value = "0", .unit = "W"},
     .powHouse { .id = "331", .value = "0", .unit = "W"},
     .powMeter { .id = "330", .value = "0", .unit = "W"}
@@ -296,6 +298,8 @@ void setup()
   rxJeedomAPI = getJeedomValueById(client, &houseSensors.tempOffice);
   checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
   rxJeedomAPI = getJeedomValueById(client, &houseSensors.tempLiving);
+  checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
+  rxJeedomAPI = getJeedomValueById(client, &houseSensors.humidityLiving);
   checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
   rxJeedomAPI = getJeedomValueById(client, &houseSensors.powSolar);
   checkHttpError(rxJeedomAPI, "Jeedom API", wi_cloud_down_196x196, startTime, &timeInfo);
