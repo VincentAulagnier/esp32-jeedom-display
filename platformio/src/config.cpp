@@ -36,7 +36,7 @@ const uint8_t PIN_BME_SCL = 16;
 const uint8_t BME_ADDRESS = 0x76; // if sensor does not work, try 0x77
 
 // WIFI CREDENTIALS
-const char *WIFI_SSID     = "SFR_9650";
+const char *WIFI_SSID     = "VSI_HOME";
 const char *WIFI_PASSWORD = "igona5laymolleadripp";
 //const char *WIFI_SSID     = "Wifi_Vincent";
 //const char *WIFI_PASSWORD = "vin100_8fi";
